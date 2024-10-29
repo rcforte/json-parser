@@ -1,17 +1,17 @@
 package com.rcforte.parser.json;
 
 enum TokenType {
-    OBJECT_START,
-    OBJECT_END,
+  OBJECT_START,
+  OBJECT_END,
 
-    ARRAY_START,
-    ARRAY_END,
+  ARRAY_START,
+  ARRAY_END,
 
-    PROPERTY_SEPARATOR,
-    PROPERTIES_SEPARATOR,
+  PROPERTY_SEPARATOR,
+  PROPERTIES_SEPARATOR,
 
-    STRING,
-    NUMBER,
+  STRING,
+  NUMBER,
 
-    EOF,
+  EOF,
 }
