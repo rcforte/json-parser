@@ -1,13 +1,21 @@
 package com.rcforte.parser.json;
 
+import java.util.List;
+
 @JsonClass
 public class Person {
 
-  @JsonField(mappedTo = "name")
+  @JsonField(mappedTo = "myName")
   private String name;
 
-  @JsonField(mappedTo = "age")
+  @JsonField(mappedTo = "myAge")
   private Integer age;
+
+  @JsonField(mappedTo = "myFriend")
+  private Person friend;
+
+  @JsonField(mappedTo = "myNickNames")
+  private List<String> nickNames;
 
   public void setName(String name) {
     this.name = name;
@@ -30,6 +38,8 @@ public class Person {
     return "Person{" +
         "name='" + name + '\'' +
         ", age=" + age +
+        ", friend=" + friend +
+        ", nickNames=" + nickNames +
         '}';
   }
 }

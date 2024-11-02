@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
@@ -57,15 +56,15 @@ public class ParserTest {
   public void parse_JSON_Using_Annotations() {
     var json = """
       {
-          "name": "Rafael",
-          "age": 42
+          "myName": "Rafael",
+          "myAge": 42,
+          "myFriend": {
+            "myName": "John",
+            "myAge": 48
+          },
+          "myNickNames": ["Rafa", "rcforte", "Amor"]
       }
       """;
-
-    var source = new Source(json);
-    var scanner = new Scanner(source);
-    var parser = new Parser(scanner);
-    var object = parser.parse();
 
     try {
       var person = Parser.parse(Person.class, json);

@@ -8,7 +8,43 @@ import java.util.Map;
 import static com.rcforte.parser.json.TokenType.*;
 
 public class Parser {
+  public static Object parse(Class<?> clazz, Map<String, Object> map) throws Exception {
+    if(clazz == null)
+      throw new IllegalArgumentException("clazz cannot be null");
+    if(map == null)
+      throw new IllegalArgumentException("map cannot be null");
+
+    var obj = clazz.newInstance();
+    var fields = clazz.getDeclaredFields();
+
+    for(var field : fields) {
+      if(!field.isAnnotationPresent(JsonField.class))
+        continue;
+
+      var annotation = field.getAnnotationsByType(JsonField.class)[0];
+      field.setAccessible(true);
+
+      if(!field.getType().isAnnotationPresent(JsonClass.class))
+        field.set(obj, map.get(annotation.mappedTo()));
+      else {
+        var innerObj = (Map) map.get(annotation.mappedTo());
+        if(innerObj == null)
+          continue;
+
+        var fieldObj = parse(field.getType(), innerObj);
+        field.set(obj, fieldObj);
+      }
+    }
+
+    return(obj);
+  }
+
   public static Object parse(Class<?> clazz, String json) throws Exception {
+    if(clazz == null)
+      throw new IllegalArgumentException("clazz cannot be null");
+    if(json == null)
+      throw new IllegalArgumentException("json cannot be null");
+
     if(!clazz.isAnnotationPresent(JsonClass.class))
       return null;
 
@@ -17,25 +53,17 @@ public class Parser {
     var parser = new Parser(scanner);
     var mapObj = parser.parse();
 
-    var obj = clazz.newInstance();
-    var map = (Map) mapObj;
-    var fields = clazz.getDeclaredFields();
-
-    for(var field : fields) {
-      if(!field.isAnnotationPresent(JsonField.class))
-        continue;
-      var annotation = field.getAnnotationsByType(JsonField.class)[0];
-      field.setAccessible(true);
-      field.set(obj, map.get(annotation.mappedTo()));
-    }
-
-    return(obj);
+    return parse(clazz, mapObj);
   }
+
   public static void quit(String message) {
     System.err.println(message);
     System.exit(1);
   }
 
+  /**
+   * Change a string like " 'myString' " to "myString".
+   */
   private static String clear(String value) {
     value = value.strip();
     value = value.substring(1);
@@ -103,14 +131,16 @@ public class Parser {
     var property = new HashMap<String, Object>();
 
     // Validate assumptions.
-    if(token.type != STRING)
+    if(token.type != STRING) {
       quit("Expected string, but found: " + token.value);
+    }
 
     // Read property name.
     var name = clear(token.value);
     token = nextToken();
-    if(token.type != PROPERTY_SEPARATOR)
+    if(token.type != PROPERTY_SEPARATOR) {
       quit("Expected property separator, but found: " + token.value);
+    }
 
     // Read property value.
     var value = (Object) null;
