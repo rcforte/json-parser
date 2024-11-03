@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 public class ParserTest {
   @Test
-  public void parse_JSON_String() {
+  public void parse_JSON_String() throws Exception {
     var json = """
       {
           "name": "Rafael",
@@ -53,7 +53,7 @@ public class ParserTest {
   }
 
   @Test
-  public void parse_JSON_Using_Annotations() {
+  public void parse_JSON_Using_Annotations() throws Exception {
     var json = """
       {
           "myName": "Rafael",
@@ -66,12 +66,17 @@ public class ParserTest {
       }
       """;
 
-    try {
-      var person = Parser.parse(Person.class, json);
-      System.out.println(person);
-    } catch(Exception e) {
-      e.printStackTrace();
-    }
+    var person = (Person) Parser.parse(Person.class, json);
+    assertEquals("Rafael", person.name());
+    assertEquals(42, person.age());
+    var friend = new Person();
+    friend.name("John");
+    friend.age(48);
+    assertEquals(friend, person.friend());
+    var list = new ArrayList<Object>();
+    list.add("Rafa");
+    list.add("rcforte");
+    list.add("Amor");
+    assertEquals(list, person.nickNames());
   }
-
 }

@@ -44,7 +44,6 @@ public class Parser {
       throw new IllegalArgumentException("clazz cannot be null");
     if(json == null)
       throw new IllegalArgumentException("json cannot be null");
-
     if(!clazz.isAnnotationPresent(JsonClass.class))
       return null;
 

@@ -6,31 +6,59 @@ import java.util.List;
 public class Person {
 
   @JsonField(mappedTo = "myName")
-  private String name;
+  String name;
 
   @JsonField(mappedTo = "myAge")
-  private Integer age;
+  Integer age;
 
   @JsonField(mappedTo = "myFriend")
-  private Person friend;
+  Person friend;
 
   @JsonField(mappedTo = "myNickNames")
-  private List<String> nickNames;
+  List<Object> nickNames;
 
-  public void setName(String name) {
+  public void name(String name) {
     this.name = name;
   }
 
-  public String getName() {
+  public String name() {
     return name;
   }
 
-  public void setAge(Integer age) {
+  public void age(Integer age) {
     this.age = age;
   }
 
-  public Integer getAge() {
+  public Integer age() {
     return age;
+  }
+
+  public void friend(Person friend) {
+    this.friend = friend;
+  }
+
+  public Person friend() {
+    return friend;
+  }
+
+  public void nickNames(List<Object> nickNames) {
+    this.nickNames = nickNames;
+  }
+
+  public List<Object> nickNames() {
+    return nickNames;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if(this == o) return true;
+    if(o == null || getClass() != o.getClass()) return false;
+
+    var p = (Person) o;
+    return (p.name == null && name == null) || (p.name != null && p.name.equals(name))
+        && (p.age == null && age == null) || (p.age != null && p.age.equals(age))
+        && (p.friend == null && friend == null) || (p.friend != null && p.friend.equals(friend))
+        && (p.nickNames == null & nickNames == null) || (p.nickNames != null && p.nickNames.equals(nickNames));
   }
 
   @Override
